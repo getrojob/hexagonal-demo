@@ -6,13 +6,16 @@ import org.springframework.web.client.RestClient;
 
 import com.hexa.hexagonal_demo.application.service.CreateUserService;
 import com.hexa.hexagonal_demo.application.service.GetAddressService;
+import com.hexa.hexagonal_demo.application.service.GetFeriadoService;
 import com.hexa.hexagonal_demo.application.service.GetUserByCpfService;
 import com.hexa.hexagonal_demo.application.service.GetUserService;
 import com.hexa.hexagonal_demo.domain.port.in.CreateUserUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetAddressUseCase;
+import com.hexa.hexagonal_demo.domain.port.in.GetFeriadoUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserByCpfUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserUseCase;
 import com.hexa.hexagonal_demo.domain.port.out.AddressExternalService;
+import com.hexa.hexagonal_demo.domain.port.out.FeriadoService;
 import com.hexa.hexagonal_demo.domain.port.out.UserRepository;
 
 @Configuration
@@ -37,6 +40,12 @@ public class BeanConfig {
     public GetAddressUseCase getAddressUseCase(AddressExternalService addressExternalService) {
         // O Spring injeta o ViaCepAdapter (que é um @Component) aqui automaticamente
         return new GetAddressService(addressExternalService);
+    }
+
+    @Bean
+    public GetFeriadoUseCase getFeriadoUseCase(FeriadoService feriadoExternalService) {
+        // O Spring injeta o FeriadoAdapter (que é um @Component) aqui automaticamente
+        return new GetFeriadoService(feriadoExternalService);
     }
 
     @Bean

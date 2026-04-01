@@ -4,16 +4,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hexa.hexagonal_demo.application.mapper.AddressMapper;
+import com.hexa.hexagonal_demo.application.mapper.FeriadoMapper;
 import com.hexa.hexagonal_demo.application.mapper.UserMapper;
 import com.hexa.hexagonal_demo.domain.port.in.CreateUserCommand;
 import com.hexa.hexagonal_demo.domain.port.in.CreateUserUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetAddressQuery;
 import com.hexa.hexagonal_demo.domain.port.in.GetAddressUseCase;
+import com.hexa.hexagonal_demo.domain.port.in.GetFeriadoQuery;
+import com.hexa.hexagonal_demo.domain.port.in.GetFeriadoUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserByCpfQuery;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserByCpfUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserQuery;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserUseCase;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -29,13 +33,16 @@ public class UserController {
     private final GetUserUseCase getUserUseCase;
     private final GetUserByCpfUseCase getUserByCpfUseCase;
     private final GetAddressUseCase getAddressUseCase;
+    private final GetFeriadoUseCase getFeriadoUseCase;
 
     public UserController(CreateUserUseCase createUserUseCase, GetUserUseCase getUserUseCase,
-            GetUserByCpfUseCase getUserByCpfUseCase, GetAddressUseCase getAddressUseCase) {
+            GetUserByCpfUseCase getUserByCpfUseCase, GetAddressUseCase getAddressUseCase,
+            GetFeriadoUseCase getFeriadoUseCase) {
         this.createUserUseCase = createUserUseCase;
         this.getUserUseCase = getUserUseCase;
         this.getUserByCpfUseCase = getUserByCpfUseCase;
         this.getAddressUseCase = getAddressUseCase;
+        this.getFeriadoUseCase = getFeriadoUseCase;
     }
 
     @GetMapping
@@ -73,5 +80,17 @@ public class UserController {
 
         // 3. Mapeia para o DTO de resposta e retorna 200 OK
         return ResponseEntity.ok(AddressMapper.toResponse(address));
+    }
+
+    @GetMapping("/feriado/{year}")
+    public ResponseEntity<List<FeriadoResponse>> getAFeriado(@PathVariable String year) {
+        // 1. Cria a Query com o dado da URL
+        var query = new GetFeriadoQuery(year);
+
+        // 2. Executa o Caso de Uso
+        var feriado = getFeriadoUseCase.execute(query);
+
+        // 3. Mapeia para o DTO de resposta e retorna 200 OK
+        return ResponseEntity.ok(FeriadoMapper.toResponse(feriado));
     }
 }
