@@ -14,8 +14,8 @@ public class ViaCepAdapter implements AddressExternalService {
     private final RestClient restClient;
     private final String URL = "https://viacep.com.br/ws/{cep}/json/";
 
-    public ViaCepAdapter(RestClient.Builder builder) {
-        this.restClient = builder.build();
+    public ViaCepAdapter() {
+        this.restClient = RestClient.create();
     }
 
     @Override
@@ -26,11 +26,18 @@ public class ViaCepAdapter implements AddressExternalService {
                     .uri(URL, zipCode)
                     .retrieve()
                     .body(ViaCepDto.class);
-            
-            if (response == null || response.cep() == null) return Optional.empty();
+
+            if (response == null || response.cep() == null)
+                return Optional.empty();
 
             // Converte o DTO do terceiro para o seu modelo de Domínio
-            return Optional.of(new Address(response.cep(), response.logradouro(), null, null, null, response.localidade(), null, null, null, null, null, null, null));
+            return Optional.of(
+                    new Address(response.cep(), response.logradouro(), response.complemento(), response.unidade(),
+                            response.bairro(),
+                            response.localidade(), response.uf(), response.estado(), response.regiao(), response.ibge(),
+                            response.gia(), response.ddd(),
+                            response.siafi()));
+
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -38,4 +45,7 @@ public class ViaCepAdapter implements AddressExternalService {
 }
 
 // Record auxiliar para mapear o JSON do terceiro
-record ViaCepDto(String cep, String logradouro, String localidade) {}
+record ViaCepDto(String cep, String logradouro, String bairro, String localidade, String uf, String estado,
+        String regiao, String complemento, String unidade, String ibge, String gia,
+        String ddd, String siafi) {
+}

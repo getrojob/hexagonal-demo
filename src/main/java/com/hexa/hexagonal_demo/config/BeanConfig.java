@@ -4,11 +4,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.hexa.hexagonal_demo.application.service.CreateUserService;
+import com.hexa.hexagonal_demo.application.service.GetAddressService;
 import com.hexa.hexagonal_demo.application.service.GetUserByCpfService;
 import com.hexa.hexagonal_demo.application.service.GetUserService;
 import com.hexa.hexagonal_demo.domain.port.in.CreateUserUseCase;
+import com.hexa.hexagonal_demo.domain.port.in.GetAddressUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserByCpfUseCase;
 import com.hexa.hexagonal_demo.domain.port.in.GetUserUseCase;
+import com.hexa.hexagonal_demo.domain.port.out.AddressExternalService;
 import com.hexa.hexagonal_demo.domain.port.out.UserRepository;
 
 @Configuration
@@ -28,6 +31,18 @@ public class BeanConfig {
     public GetUserByCpfUseCase getUserByCpfUseCase(UserRepository userRepository) {
         return new GetUserByCpfService(userRepository);
     }
+
+    @Bean
+    public GetAddressUseCase getAddressUseCase(AddressExternalService addressExternalService) {
+        // O Spring injeta o ViaCepAdapter (que é um @Component) aqui automaticamente
+        return new GetAddressService(addressExternalService);
+    }
+
+    @Bean
+    public org.springframework.web.client.RestClient.Builder restClientBuilder() {
+        return org.springframework.web.client.RestClient.builder();
+    }
 }
 
-//@Configuration + @Bean para controlar a injeção de dependência sem poluir o domínio/application com Spring
+// @Configuration + @Bean para controlar a injeção de dependência sem poluir o
+// domínio/application com Spring
