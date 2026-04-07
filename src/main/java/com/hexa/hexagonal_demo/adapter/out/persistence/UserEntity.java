@@ -41,8 +41,16 @@ public class UserEntity implements UserDetails {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getEmail() {
         return email;
+    }
+
+    public String getCpf() {
+        return cpf;
     }
 
     @Override
