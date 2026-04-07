@@ -5,14 +5,17 @@ import java.util.UUID;
 import com.hexa.hexagonal_demo.domain.model.User;
 import com.hexa.hexagonal_demo.domain.port.in.CreateUserCommand;
 import com.hexa.hexagonal_demo.domain.port.in.CreateUserUseCase;
+import com.hexa.hexagonal_demo.domain.port.out.PasswordEncoderPort;
 import com.hexa.hexagonal_demo.domain.port.out.UserRepository;
 
 public class CreateUserService implements CreateUserUseCase {
 
     private final UserRepository userRepository;
+    private final PasswordEncoderPort passwordEncoder;
 
-    public CreateUserService(UserRepository userRepository) {
+    public CreateUserService(UserRepository userRepository, PasswordEncoderPort passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -21,7 +24,8 @@ public class CreateUserService implements CreateUserUseCase {
                 UUID.randomUUID(),
                 command.name(),
                 command.email(),
-                command.cpf()
+                passwordEncoder.encode(command.senha()),
+                        command.cpf()
         );
         return userRepository.save(user);
     }

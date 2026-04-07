@@ -6,13 +6,15 @@ public class User {
     private final UUID id;
     private final String name;
     private final String email;
+    private final String senhaCriptografada; // O domínio guarda a senha já segura
     private final String cpf;
 
-    public User(UUID id, String name, String email, String cpf) {
+    public User(UUID id, String name, String email, String senhaCriptografada, String cpf) {
         validate(name, email, cpf);
         this.id = id;
         this.name = name;
         this.email = email;
+        this.senhaCriptografada = senhaCriptografada;
         this.cpf = cpf;
     }
 
@@ -42,5 +44,9 @@ public class User {
 
     public String getCpf() {
         return cpf;
+    }
+
+    public String getSenhaCriptografada() {
+        return senhaCriptografada;
     }
 }

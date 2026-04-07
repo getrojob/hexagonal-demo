@@ -22,8 +22,9 @@ import com.hexa.hexagonal_demo.domain.port.out.UserRepository;
 public class BeanConfig {
 
     @Bean
-    public CreateUserUseCase createUserUseCase(UserRepository userRepository) {
-        return new CreateUserService(userRepository);
+    public CreateUserUseCase createUserUseCase(UserRepository userRepository,
+            com.hexa.hexagonal_demo.domain.port.out.PasswordEncoderPort passwordEncoder) {
+        return new CreateUserService(userRepository, passwordEncoder);
     }
 
     @Bean
